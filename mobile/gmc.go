@@ -1,45 +1,45 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-flagman Authors
+// This file is part of the go-flagman library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-flagman library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-flagman library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-flagman library. If not, see <http://www.gnu.org/licenses/>.
 
 // Contains all the wrappers from the node package to support client side node
 // management on mobile platforms.
 
-package gmc
+package gfl
 
 import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
 
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ethereum/go-ethereum/ethstats"
-	"github.com/ethereum/go-ethereum/les"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/nat"
-	"github.com/ethereum/go-ethereum/params"
-	whisper "github.com/ethereum/go-ethereum/whisper/whisperv5"
+	"github.com/getflagman/go-flagman/core"
+	"github.com/getflagman/go-flagman/eth"
+	"github.com/getflagman/go-flagman/eth/downloader"
+	"github.com/getflagman/go-flagman/ethclient"
+	"github.com/getflagman/go-flagman/ethstats"
+	"github.com/getflagman/go-flagman/les"
+	"github.com/getflagman/go-flagman/node"
+	"github.com/getflagman/go-flagman/p2p"
+	"github.com/getflagman/go-flagman/p2p/nat"
+	"github.com/getflagman/go-flagman/params"
+	whisper "github.com/getflagman/go-flagman/whisper/whisperv5"
 )
 
-// NodeConfig represents the collection of configuration values to fine tune the GMC
+// NodeConfig represents the collection of configuration values to fine tune the gfl
 // node embedded into a mobile process. The available values are a subset of the
-// entire API provided by go-ethereum to reduce the maintenance surface and dev
+// entire API provided by go-flagman to reduce the maintenance surface and dev
 // complexity.
 type NodeConfig struct {
 	// Bootstrap nodes used to establish connectivity with the rest of the network.
@@ -80,7 +80,7 @@ var defaultNodeConfig = &NodeConfig{
 	BootstrapNodes:        FoundationBootnodes(),
 	MaxPeers:              25,
 	EthereumEnabled:       true,
-	EthereumNetworkID:     7762959,
+	EthereumNetworkID:     34123412,
 	EthereumDatabaseCache: 16,
 }
 
@@ -90,12 +90,12 @@ func NewNodeConfig() *NodeConfig {
 	return &config
 }
 
-// Node represents a GMC Ethereum node instance.
+// Node represents a gfl Ethereum node instance.
 type Node struct {
 	node *node.Node
 }
 
-// NewNode creates and configures a new GMC node.
+// NewNode creates and configures a new gfl node.
 func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 	// If no or partial configurations were specified, use defaults
 	if config == nil {
@@ -137,7 +137,7 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 		// If we have the testnet, hard code the chain configs too
 		if config.EthereumGenesis == TestnetGenesis() {
 			genesis.Config = params.TestnetChainConfig
-			if config.EthereumNetworkID == 7762959 {
+			if config.EthereumNetworkID == 34123412 {
 				config.EthereumNetworkID = 7762955
 			}
 		}

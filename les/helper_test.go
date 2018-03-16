@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-flagman Authors
+// This file is part of the go-flagman library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-flagman library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-flagman library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-flagman library. If not, see <http://www.gnu.org/licenses/>.
 
 // This file contains some shares testing functionality, common to  multiple
 // different files and modules being tested.
@@ -25,19 +25,19 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/consensus/ethash"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/les/flowcontrol"
-	"github.com/ethereum/go-ethereum/light"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/params"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/consensus/ethash"
+	"github.com/getflagman/go-flagman/core"
+	"github.com/getflagman/go-flagman/core/types"
+	"github.com/getflagman/go-flagman/core/vm"
+	"github.com/getflagman/go-flagman/crypto"
+	"github.com/getflagman/go-flagman/ethdb"
+	"github.com/getflagman/go-flagman/event"
+	"github.com/getflagman/go-flagman/les/flowcontrol"
+	"github.com/getflagman/go-flagman/light"
+	"github.com/getflagman/go-flagman/p2p"
+	"github.com/getflagman/go-flagman/p2p/discover"
+	"github.com/getflagman/go-flagman/params"
 )
 
 var (

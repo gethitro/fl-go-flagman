@@ -1,20 +1,20 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2014 The go-flagman Authors
+// This file is part of go-flagman.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-flagman is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-flagman is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-flagman. If not, see <http://www.gnu.org/licenses/>.
 
-// gmc is the official command-line client for Musicoin.
+// gfl is the official command-line client for flagman.
 package main
 
 import (
@@ -25,31 +25,31 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/console"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ethereum/go-ethereum/internal/debug"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/node"
+	"github.com/getflagman/go-flagman/accounts"
+	"github.com/getflagman/go-flagman/accounts/keystore"
+	"github.com/getflagman/go-flagman/cmd/utils"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/console"
+	"github.com/getflagman/go-flagman/eth"
+	"github.com/getflagman/go-flagman/ethclient"
+	"github.com/getflagman/go-flagman/internal/debug"
+	"github.com/getflagman/go-flagman/log"
+	"github.com/getflagman/go-flagman/metrics"
+	"github.com/getflagman/go-flagman/node"
 	"gopkg.in/urfave/cli.v1"
 )
 
 const (
-	clientIdentifier = "gmc" // Client identifier to advertise over the network
+	clientIdentifier = "gfl" // Client identifier to advertise over the network
 )
 
 var (
 	// Git SHA1 commit hash of the release (set via linker flags)
 	gitCommit = ""
-	// Ethereum address of the GMC release oracle.
+	// Ethereum address of the gfl release oracle.
 	relOracle = common.HexToAddress("0xfa7b9770ca4cb04296cac84f37736d4041251cdf")
 	// The app that holds all commands and flags.
-	app = utils.NewApp(gitCommit, "the go-ethereum command line interface")
+	app = utils.NewApp(gitCommit, "the go-flagman command line interface")
 	// flags that configure the node
 	nodeFlags = []cli.Flag{
 		utils.IdentityFlag,
@@ -143,24 +143,24 @@ var (
 )
 
 func init() {
-	// Initialize the CLI app and start GMC
-	app.Action = gmc
+	// Initialize the CLI app and start gfl
+	app.Action = gfl
 	app.HideVersion = true // we have a command to print the version
-	app.Copyright = `Copyright 2013-2017 The Go-Ethereum Authors
-   Copyright 2016-2017 The Go-Musicoin Authors
+	app.Copyright = `Copyright 2013-2017 The go-flagman Authors
+   Copyright 2016-2017 The Go-flagman Authors
 
-   Go-Musicoin is free software: you can redistribute it and/or modify
+   Go-flagman is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   Go-Musicoin is distributed in the hope that it will be useful,
+   Go-flagman is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Go-Musicoin. If not, see <http://www.gnu.org/licenses/>.`
+   along with Go-flagman. If not, see <http://www.gnu.org/licenses/>.`
 	app.Commands = []cli.Command{
 		// See chaincmd.go:
 		initCommand,
@@ -221,10 +221,10 @@ func main() {
 	}
 }
 
-// gmc is the main entry point into the system if no special subcommand is ran.
+// gfl is the main entry point into the system if no special subcommand is ran.
 // It creates a default node based on the command line arguments and runs it in
 // blocking mode, waiting for it to be shut down.
-func gmc(ctx *cli.Context) error {
+func gfl(ctx *cli.Context) error {
 	node := makeFullNode(ctx)
 	startNode(ctx, node)
 	node.Wait()

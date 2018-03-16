@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-flagman Authors
+// This file is part of the go-flagman library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-flagman library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-flagman library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-flagman library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -25,15 +25,15 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/common/hexutil"
+	"github.com/getflagman/go-flagman/common/math"
+	"github.com/getflagman/go-flagman/core/state"
+	"github.com/getflagman/go-flagman/core/types"
+	"github.com/getflagman/go-flagman/ethdb"
+	"github.com/getflagman/go-flagman/log"
+	"github.com/getflagman/go-flagman/params"
+	"github.com/getflagman/go-flagman/rlp"
 )
 
 //go:generate gencodec -type Genesis -field-override genesisSpecMarshaling -out gen_genesis.go
@@ -159,7 +159,7 @@ func SetupGenesisBlock(db ethdb.Database, genesis *Genesis) (*params.ChainConfig
 	if (stored == common.Hash{}) {
 		if genesis == nil {
 			log.Info("Writing default main-net genesis block")
-			genesis = MusicoinGenesisBlock()
+			genesis = flagmanGenesisBlock()
 		} else {
 			log.Info("Writing custom genesis block")
 		}
@@ -319,8 +319,8 @@ func DefaultGenesisBlock() *Genesis {
 	}
 }
 
-// MusicoinGenesisBlock returns the Musicoin main net genesis block.
-func MusicoinGenesisBlock() *Genesis {
+// flagmanGenesisBlock returns the flagman main net genesis block.
+func flagmanGenesisBlock() *Genesis {
 	return &Genesis{
 		Config:     params.MainnetChainConfig,
 		Timestamp:  0,
@@ -359,7 +359,7 @@ func DefaultRinkebyGenesisBlock() *Genesis {
 	}
 }
 
-// DeveloperGenesisBlock returns the 'gmc --dev' genesis block. Note, this must
+// DeveloperGenesisBlock returns the 'gfl --dev' genesis block. Note, this must
 // be seeded with the
 func DeveloperGenesisBlock(period uint64, faucet common.Address) *Genesis {
 	// Override the default period to the user requested one

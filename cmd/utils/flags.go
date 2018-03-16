@@ -1,20 +1,20 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2015 The go-flagman Authors
+// This file is part of go-flagman.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-flagman is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-flagman is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-flagman. If not, see <http://www.gnu.org/licenses/>.
 
-// Package utils contains internal helper functions for go-ethereum commands.
+// Package utils contains internal helper functions for go-flagman commands.
 package utils
 
 import (
@@ -28,34 +28,34 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/fdlimit"
-	"github.com/ethereum/go-ethereum/consensus"
-	"github.com/ethereum/go-ethereum/consensus/clique"
-	"github.com/ethereum/go-ethereum/consensus/ethash"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/dashboard"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/eth/gasprice"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/ethstats"
-	"github.com/ethereum/go-ethereum/les"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/p2p/discv5"
-	"github.com/ethereum/go-ethereum/p2p/nat"
-	"github.com/ethereum/go-ethereum/p2p/netutil"
-	"github.com/ethereum/go-ethereum/params"
-	whisper "github.com/ethereum/go-ethereum/whisper/whisperv5"
+	"github.com/getflagman/go-flagman/accounts"
+	"github.com/getflagman/go-flagman/accounts/keystore"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/common/fdlimit"
+	"github.com/getflagman/go-flagman/consensus"
+	"github.com/getflagman/go-flagman/consensus/clique"
+	"github.com/getflagman/go-flagman/consensus/ethash"
+	"github.com/getflagman/go-flagman/core"
+	"github.com/getflagman/go-flagman/core/state"
+	"github.com/getflagman/go-flagman/core/vm"
+	"github.com/getflagman/go-flagman/crypto"
+	"github.com/getflagman/go-flagman/dashboard"
+	"github.com/getflagman/go-flagman/eth"
+	"github.com/getflagman/go-flagman/eth/downloader"
+	"github.com/getflagman/go-flagman/eth/gasprice"
+	"github.com/getflagman/go-flagman/ethdb"
+	"github.com/getflagman/go-flagman/ethstats"
+	"github.com/getflagman/go-flagman/les"
+	"github.com/getflagman/go-flagman/log"
+	"github.com/getflagman/go-flagman/metrics"
+	"github.com/getflagman/go-flagman/node"
+	"github.com/getflagman/go-flagman/p2p"
+	"github.com/getflagman/go-flagman/p2p/discover"
+	"github.com/getflagman/go-flagman/p2p/discv5"
+	"github.com/getflagman/go-flagman/p2p/nat"
+	"github.com/getflagman/go-flagman/p2p/netutil"
+	"github.com/getflagman/go-flagman/params"
+	whisper "github.com/getflagman/go-flagman/whisper/whisperv5"
 	"gopkg.in/urfave/cli.v1"
 )
 
@@ -128,7 +128,7 @@ var (
 	}
 	NetworkIdFlag = cli.Uint64Flag{
 		Name:  "networkid",
-		Usage: "Network identifier (integer, 7762959=Musicoin, 7762955=Musictest)",
+		Usage: "Network identifier (integer, 34123412=flagman, 7762955=Musictest)",
 		Value: eth.DefaultConfig.NetworkId,
 	}
 	TestnetFlag = cli.BoolFlag{
@@ -712,7 +712,7 @@ func setIPC(ctx *cli.Context, cfg *node.Config) {
 }
 
 // makeDatabaseHandles raises out the number of allowed file handles per process
-// for GMC and returns half of the allowance to assign to the database.
+// for gfl and returns half of the allowance to assign to the database.
 func makeDatabaseHandles() int {
 	if err := fdlimit.Raise(2048); err != nil {
 		Fatalf("Failed to raise file descriptor allowance: %v", err)
@@ -1216,11 +1216,11 @@ func MakeConsolePreloads(ctx *cli.Context) []string {
 // This is a temporary function used for migrating old command/flags to the
 // new format.
 //
-// e.g. gmc account new --keystore /tmp/mykeystore --lightkdf
+// e.g. gfl account new --keystore /tmp/mykeystore --lightkdf
 //
 // is equivalent after calling this method with:
 //
-// gmc --keystore /tmp/mykeystore --lightkdf account new
+// gfl --keystore /tmp/mykeystore --lightkdf account new
 //
 // This allows the use of the existing configuration functionality.
 // When all flags are migrated this function can be removed and the existing

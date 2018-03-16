@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2016 The go-flagman Authors
+// This file is part of go-flagman.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-flagman is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-flagman is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-flagman. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -31,23 +31,23 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/console"
-	"github.com/ethereum/go-ethereum/contracts/ens"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ethereum/go-ethereum/internal/debug"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/ethereum/go-ethereum/swarm"
-	bzzapi "github.com/ethereum/go-ethereum/swarm/api"
+	"github.com/getflagman/go-flagman/accounts"
+	"github.com/getflagman/go-flagman/accounts/keystore"
+	"github.com/getflagman/go-flagman/cmd/utils"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/console"
+	"github.com/getflagman/go-flagman/contracts/ens"
+	"github.com/getflagman/go-flagman/crypto"
+	"github.com/getflagman/go-flagman/ethclient"
+	"github.com/getflagman/go-flagman/internal/debug"
+	"github.com/getflagman/go-flagman/log"
+	"github.com/getflagman/go-flagman/node"
+	"github.com/getflagman/go-flagman/p2p"
+	"github.com/getflagman/go-flagman/p2p/discover"
+	"github.com/getflagman/go-flagman/params"
+	"github.com/getflagman/go-flagman/rpc"
+	"github.com/getflagman/go-flagman/swarm"
+	bzzapi "github.com/getflagman/go-flagman/swarm/api"
 
 	"gopkg.in/urfave/cli.v1"
 )
@@ -166,7 +166,7 @@ var (
 
 var defaultNodeConfig = node.DefaultConfig
 
-// This init function sets defaults so cmd/swarm can run alongside gmc.
+// This init function sets defaults so cmd/swarm can run alongside gfl.
 func init() {
 	defaultNodeConfig.Name = clientIdentifier
 	defaultNodeConfig.Version = params.VersionWithCommit(gitCommit)
@@ -182,7 +182,7 @@ var app = utils.NewApp(gitCommit, "Ethereum Swarm")
 func init() {
 	app.Action = bzzd
 	app.HideVersion = true // we have a command to print the version
-	app.Copyright = "Copyright 2013-2016 The go-ethereum Authors"
+	app.Copyright = "Copyright 2013-2016 The go-flagman Authors"
 	app.Commands = []cli.Command{
 		{
 			Action:    version,
@@ -405,7 +405,7 @@ func bzzd(ctx *cli.Context) error {
 	}
 
 	cfg := defaultNodeConfig
-	//gmc only supports --datadir via command line
+	//gfl only supports --datadir via command line
 	//in order to be consistent within swarm, if we pass --datadir via environment variable
 	//or via config file, we get the same directory for geth and swarm
 	if _, err := os.Stat(bzzconfig.Path); err == nil {

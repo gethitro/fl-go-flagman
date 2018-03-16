@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2016 The go-flagman Authors
+// This file is part of go-flagman.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-flagman is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-flagman is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-flagman. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -23,10 +23,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/console"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/getflagman/go-flagman/cmd/utils"
+	"github.com/getflagman/go-flagman/console"
+	"github.com/getflagman/go-flagman/node"
+	"github.com/getflagman/go-flagman/rpc"
 	"gopkg.in/urfave/cli.v1"
 )
 
@@ -40,9 +40,9 @@ var (
 		Flags:    append(append(append(nodeFlags, rpcFlags...), consoleFlags...), whisperFlags...),
 		Category: "CONSOLE COMMANDS",
 		Description: `
-The GMC console is an interactive shell for the JavaScript runtime environment
+The gfl console is an interactive shell for the JavaScript runtime environment
 which exposes a node admin interface as well as the Ðapp JavaScript API.
-See https://github.com/ethereum/go-ethereum/wiki/Javascipt-Console.`,
+See https://github.com/getflagman/go-flagman/wiki/Javascipt-Console.`,
 	}
 
 	attachCommand = cli.Command{
@@ -53,10 +53,10 @@ See https://github.com/ethereum/go-ethereum/wiki/Javascipt-Console.`,
 		Flags:     append(consoleFlags, utils.DataDirFlag),
 		Category:  "CONSOLE COMMANDS",
 		Description: `
-The GMC console is an interactive shell for the JavaScript runtime environment
+The gfl console is an interactive shell for the JavaScript runtime environment
 which exposes a node admin interface as well as the Ðapp JavaScript API.
-See https://github.com/ethereum/go-ethereum/wiki/Javascipt-Console.
-This command allows to open a console on a running gmc node.`,
+See https://github.com/getflagman/go-flagman/wiki/Javascipt-Console.
+This command allows to open a console on a running gfl node.`,
 	}
 
 	javascriptCommand = cli.Command{
@@ -68,11 +68,11 @@ This command allows to open a console on a running gmc node.`,
 		Category:  "CONSOLE COMMANDS",
 		Description: `
 The JavaScript VM exposes a node admin interface as well as the Ðapp
-JavaScript API. See https://github.com/ethereum/go-ethereum/wiki/Javascipt-Console`,
+JavaScript API. See https://github.com/getflagman/go-flagman/wiki/Javascipt-Console`,
 	}
 )
 
-// localConsole starts a new gmc node, attaching a JavaScript console to it at the
+// localConsole starts a new gfl node, attaching a JavaScript console to it at the
 // same time.
 func localConsole(ctx *cli.Context) error {
 	// Create and start the node based on the CLI flags
@@ -83,7 +83,7 @@ func localConsole(ctx *cli.Context) error {
 	// Attach to the newly started node and start the JavaScript console
 	client, err := node.Attach()
 	if err != nil {
-		utils.Fatalf("Failed to attach to the inproc gmc: %v", err)
+		utils.Fatalf("Failed to attach to the inproc gfl: %v", err)
 	}
 	config := console.Config{
 		DataDir: utils.MakeDataDir(ctx),
@@ -110,10 +110,10 @@ func localConsole(ctx *cli.Context) error {
 	return nil
 }
 
-// remoteConsole will connect to a remote gmc instance, attaching a JavaScript
+// remoteConsole will connect to a remote gfl instance, attaching a JavaScript
 // console to it.
 func remoteConsole(ctx *cli.Context) error {
-	// Attach to a remotely running gmc instance and start the JavaScript console
+	// Attach to a remotely running gfl instance and start the JavaScript console
 	endpoint := ctx.Args().First()
 	if endpoint == "" {
 		path := node.DefaultDataDir()
@@ -131,7 +131,7 @@ func remoteConsole(ctx *cli.Context) error {
 	}
 	client, err := dialRPC(endpoint)
 	if err != nil {
-		utils.Fatalf("Unable to attach to remote gmc: %v", err)
+		utils.Fatalf("Unable to attach to remote gfl: %v", err)
 	}
 	config := console.Config{
 		DataDir: utils.MakeDataDir(ctx),
@@ -160,19 +160,19 @@ func remoteConsole(ctx *cli.Context) error {
 
 // dialRPC returns a RPC client which connects to the given endpoint.
 // The check for empty endpoint implements the defaulting logic
-// for "gmc attach" and "gmc monitor" with no argument.
+// for "gfl attach" and "gfl monitor" with no argument.
 func dialRPC(endpoint string) (*rpc.Client, error) {
 	if endpoint == "" {
 		endpoint = node.DefaultIPCEndpoint(clientIdentifier)
 	} else if strings.HasPrefix(endpoint, "rpc:") || strings.HasPrefix(endpoint, "ipc:") {
-		// Backwards compatibility with gmc < 1.5 which required
+		// Backwards compatibility with gfl < 1.5 which required
 		// these prefixes.
 		endpoint = endpoint[4:]
 	}
 	return rpc.Dial(endpoint)
 }
 
-// ephemeralConsole starts a new gmc node, attaches an ephemeral JavaScript
+// ephemeralConsole starts a new gfl node, attaches an ephemeral JavaScript
 // console to it, executes each of the files specified as arguments and tears
 // everything down.
 func ephemeralConsole(ctx *cli.Context) error {
@@ -184,7 +184,7 @@ func ephemeralConsole(ctx *cli.Context) error {
 	// Attach to the newly started node and start the JavaScript console
 	client, err := node.Attach()
 	if err != nil {
-		utils.Fatalf("Failed to attach to the inproc gmc: %v", err)
+		utils.Fatalf("Failed to attach to the inproc gfl: %v", err)
 	}
 	config := console.Config{
 		DataDir: utils.MakeDataDir(ctx),

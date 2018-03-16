@@ -6,6 +6,6 @@ sudo apt-get update
 wget --continue https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.8.1.linux-amd64.tar.gz
 
-GMC_PATH="~vagrant/go/src/github.com/ethereum/go-ethereum/build/bin/"
+gfl_PATH="~vagrant/go/src/github.com/getflagman/go-flagman/build/bin/"
 
-echo "export PATH=$PATH:/usr/local/go/bin:$GMC_PATH" >> ~vagrant/.bashrc
+echo "export PATH=$PATH:/usr/local/go/bin:$gfl_PATH" >> ~vagrant/.bashrc

@@ -4,14 +4,14 @@
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.musicoin</groupId>
-  <artifactId>gmc</artifactId>
+  <groupId>org.flagman</groupId>
+  <artifactId>gfl</artifactId>
   <version>{{.Version}}</version>
   <packaging>aar</packaging>
 
-  <name>Android Musicoin Client</name>
-  <description>Android port of the go-musicoin libraries and node</description>
-  <url>https://github.com/Musicoin/go-musicoin</url>
+  <name>Android flagman Client</name>
+  <description>Android port of the go-flagman libraries and node</description>
+  <url>https://github.com/flagman/go-flagman</url>
   <inceptionYear>2015</inceptionYear>
 
   <licenses>
@@ -23,8 +23,8 @@
   </licenses>
 
   <organization>
-    <name>Musicoin</name>
-    <url>https://musicoin.org</url>
+    <name>flagman</name>
+    <url>https://flagman.org</url>
   </organization>
 
   <developers>
@@ -48,10 +48,10 @@
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/Musicoin/go-musicoin/issues/</url>
+    <url>https://github.com/flagman/go-flagman/issues/</url>
   </issueManagement>
 
   <scm>
-    <url>https://github.com/Musicoin/go-musicoin</url>
+    <url>https://github.com/flagman/go-flagman</url>
   </scm>
 </project>

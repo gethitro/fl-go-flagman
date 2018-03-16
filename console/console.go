@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-flagman Authors
+// This file is part of the go-flagman library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-flagman library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-flagman library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-flagman library. If not, see <http://www.gnu.org/licenses/>.
 
 package console
 
@@ -27,9 +27,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/internal/jsre"
-	"github.com/ethereum/go-ethereum/internal/web3ext"
-	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/getflagman/go-flagman/internal/jsre"
+	"github.com/getflagman/go-flagman/internal/web3ext"
+	"github.com/getflagman/go-flagman/rpc"
 	"github.com/mattn/go-colorable"
 	"github.com/peterh/liner"
 	"github.com/robertkrimen/otto"
@@ -268,11 +268,11 @@ func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, str
 	return line[:start], c.jsre.CompleteKeywords(line[start:pos]), line[pos:]
 }
 
-// Welcome show summary of current GMC instance and some metadata about the
+// Welcome show summary of current gfl instance and some metadata about the
 // console's available modules.
 func (c *Console) Welcome() {
-	// Print some generic GMC metadata
-	fmt.Fprintf(c.printer, "Welcome to the GMC JavaScript console!\n\n")
+	// Print some generic gfl metadata
+	fmt.Fprintf(c.printer, "Welcome to the gfl JavaScript console!\n\n")
 	c.jsre.Run(`
 		console.log("instance: " + web3.version.node);
 		console.log("coinbase: " + eth.coinbase);

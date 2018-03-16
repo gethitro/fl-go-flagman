@@ -6,10 +6,10 @@ import (
 	"encoding/json"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/common/hexutil"
+	"github.com/getflagman/go-flagman/common/math"
+	"github.com/getflagman/go-flagman/core/types"
 )
 
 var _ = (*btHeaderMarshaling)(nil)

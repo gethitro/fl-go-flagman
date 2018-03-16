@@ -7,9 +7,9 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/common/math"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/common/hexutil"
+	"github.com/getflagman/go-flagman/common/math"
 )
 
 var _ = (*vmExecMarshaling)(nil)

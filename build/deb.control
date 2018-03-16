@@ -4,15 +4,15 @@ Priority: extra
 Maintainer: {{.Author}}
 Build-Depends: debhelper (>= 8.0.0), golang-1.9
 Standards-Version: 3.9.5
-Homepage: https://musicoin.org
-Vcs-Git: git://github.com/Musicoin/go-musicoin.git
-Vcs-Browser: https://github.com/Musicoin/go-musicoin
+Homepage: https://flagman.org
+Vcs-Git: git://github.com/flagman/go-flagman.git
+Vcs-Browser: https://github.com/flagman/go-flagman
 
 Package: {{.Name}}
 Architecture: any
 Depends: ${misc:Depends}, {{.ExeList}}
-Description: Meta-package to install gmc and other tools
- Meta-package to install gmc and other tools
+Description: Meta-package to install gfl and other tools
+ Meta-package to install gfl and other tools
 
 {{range .Executables}}
 Package: {{$.ExeName .}}

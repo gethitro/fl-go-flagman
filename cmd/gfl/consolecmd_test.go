@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2016 The go-flagman Authors
+// This file is part of go-flagman.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-flagman is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-flagman is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-flagman. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -27,7 +27,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/params"
+	"github.com/getflagman/go-flagman/params"
 )
 
 const (
@@ -40,25 +40,25 @@ const (
 func TestConsoleWelcome(t *testing.T) {
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 
-	// Start a gmc console, make sure it's cleaned up and terminate the console
-	gmc := runGMC(t,
+	// Start a gfl console, make sure it's cleaned up and terminate the console
+	gfl := rungfl(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
 		"--etherbase", coinbase, "--shh",
 		"console")
 
 	// Gather all the infos the welcome message needs to contain
-	gmc.SetTemplateFunc("goos", func() string { return runtime.GOOS })
-	gmc.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
-	gmc.SetTemplateFunc("gover", runtime.Version)
-	gmc.SetTemplateFunc("gmcver", func() string { return params.Version })
-	gmc.SetTemplateFunc("niltime", func() string { return time.Unix(0, 0).Format(time.RFC1123) })
-	gmc.SetTemplateFunc("apis", func() string { return ipcAPIs })
+	gfl.SetTemplateFunc("goos", func() string { return runtime.GOOS })
+	gfl.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
+	gfl.SetTemplateFunc("gover", runtime.Version)
+	gfl.SetTemplateFunc("gflver", func() string { return params.Version })
+	gfl.SetTemplateFunc("niltime", func() string { return time.Unix(0, 0).Format(time.RFC1123) })
+	gfl.SetTemplateFunc("apis", func() string { return ipcAPIs })
 
 	// Verify the actual welcome message to the required template
-	gmc.Expect(`
-Welcome to the GMC JavaScript console!
+	gfl.Expect(`
+Welcome to the gfl JavaScript console!
 
-instance: GMC/v{{gmcver}}/{{goos}}-{{goarch}}/{{gover}}
+instance: gfl/v{{gflver}}/{{goos}}-{{goarch}}/{{gover}}
 coinbase: {{.Etherbase}}
 at block: 0 ({{niltime}})
  datadir: {{.Datadir}}
@@ -66,7 +66,7 @@ at block: 0 ({{niltime}})
 
 > {{.InputLine "exit"}}
 `)
-	gmc.ExpectExit()
+	gfl.ExpectExit()
 }
 
 // Tests that a console can be attached to a running node via various means.
@@ -75,57 +75,57 @@ func TestIPCAttachWelcome(t *testing.T) {
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 	var ipc string
 	if runtime.GOOS == "windows" {
-		ipc = `\\.\pipe\gmc` + strconv.Itoa(trulyRandInt(100000, 999999))
+		ipc = `\\.\pipe\gfl` + strconv.Itoa(trulyRandInt(100000, 999999))
 	} else {
 		ws := tmpdir(t)
 		defer os.RemoveAll(ws)
-		ipc = filepath.Join(ws, "gmc.ipc")
+		ipc = filepath.Join(ws, "gfl.ipc")
 	}
 	// Note: we need --shh because testAttachWelcome checks for default
 	// list of ipc modules and shh is included there.
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
 		"--etherbase", coinbase, "--shh", "--ipcpath", ipc)
 
 	time.Sleep(2 * time.Second) // Simple way to wait for the RPC endpoint to open
-	testAttachWelcome(t, gmc, "ipc:"+ipc, ipcAPIs)
+	testAttachWelcome(t, gfl, "ipc:"+ipc, ipcAPIs)
 
-	gmc.Interrupt()
-	gmc.ExpectExit()
+	gfl.Interrupt()
+	gfl.ExpectExit()
 }
 
 func TestHTTPAttachWelcome(t *testing.T) {
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 	port := strconv.Itoa(trulyRandInt(1024, 65536)) // Yeah, sometimes this will fail, sorry :P
-	gmc  := runGMC(t,
+	gfl  := rungfl(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
 		"--etherbase", coinbase, "--rpc", "--rpcport", port)
 
 	time.Sleep(2 * time.Second) // Simple way to wait for the RPC endpoint to open
-	testAttachWelcome(t, gmc, "http://localhost:"+port, httpAPIs)
+	testAttachWelcome(t, gfl, "http://localhost:"+port, httpAPIs)
 
-	gmc.Interrupt()
-	gmc.ExpectExit()
+	gfl.Interrupt()
+	gfl.ExpectExit()
 }
 
 func TestWSAttachWelcome(t *testing.T) {
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 	port := strconv.Itoa(trulyRandInt(1024, 65536)) // Yeah, sometimes this will fail, sorry :P
 
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
 		"--etherbase", coinbase, "--ws", "--wsport", port)
 
 	time.Sleep(2 * time.Second) // Simple way to wait for the RPC endpoint to open
-	testAttachWelcome(t, gmc, "ws://localhost:"+port, httpAPIs)
+	testAttachWelcome(t, gfl, "ws://localhost:"+port, httpAPIs)
 
-	gmc.Interrupt()
-	gmc.ExpectExit()
+	gfl.Interrupt()
+	gfl.ExpectExit()
 }
 
-func testAttachWelcome(t *testing.T, gmc *testgmc, endpoint, apis string) {
-	// Attach to a running gmc note and terminate immediately
-	attach := runGMC(t, "attach", endpoint)
+func testAttachWelcome(t *testing.T, gfl *testgfl, endpoint, apis string) {
+	// Attach to a running gfl note and terminate immediately
+	attach := rungfl(t, "attach", endpoint)
 	defer attach.ExpectExit()
 	attach.CloseStdin()
 
@@ -133,18 +133,18 @@ func testAttachWelcome(t *testing.T, gmc *testgmc, endpoint, apis string) {
 	attach.SetTemplateFunc("goos", func() string { return runtime.GOOS })
 	attach.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
 	attach.SetTemplateFunc("gover", runtime.Version)
-	attach.SetTemplateFunc("gmcver", func() string { return params.Version })
-	attach.SetTemplateFunc("etherbase", func() string { return gmc.Etherbase })
+	attach.SetTemplateFunc("gflver", func() string { return params.Version })
+	attach.SetTemplateFunc("etherbase", func() string { return gfl.Etherbase })
 	attach.SetTemplateFunc("niltime", func() string { return time.Unix(0, 0).Format(time.RFC1123) })
 	attach.SetTemplateFunc("ipc", func() bool { return strings.HasPrefix(endpoint, "ipc") })
-	attach.SetTemplateFunc("datadir", func() string { return gmc.Datadir })
+	attach.SetTemplateFunc("datadir", func() string { return gfl.Datadir })
 	attach.SetTemplateFunc("apis", func() string { return apis })
 
 	// Verify the actual welcome message to the required template
 	attach.Expect(`
-Welcome to the GMC JavaScript console!
+Welcome to the gfl JavaScript console!
 
-instance: GMC/v{{gmcver}}/{{goos}}-{{goarch}}/{{gover}}
+instance: gfl/v{{gflver}}/{{goos}}-{{goarch}}/{{gover}}
 coinbase: {{etherbase}}
 at block: 0 ({{niltime}}){{if ipc}}
  datadir: {{datadir}}{{end}}

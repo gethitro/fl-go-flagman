@@ -1,22 +1,22 @@
 Pod::Spec.new do |spec|
-  spec.name         = 'GMC'
+  spec.name         = 'gfl'
   spec.version      = '{{.Version}}'
   spec.license      = { :type => 'GNU Lesser General Public License, Version 3.0' }
-  spec.homepage     = 'https://github.com/Musicoin/go-musicoin'
+  spec.homepage     = 'https://github.com/flagman/go-flagman'
   spec.authors      = { {{range .Contributors}}
 		'{{.Name}}' => '{{.Email}}',{{end}}
 	}
   spec.summary      = 'iOS Ethereum Client'
-  spec.source       = { :git => 'https://github.com/Musicoin/go-musicoin.git', :commit => '{{.Commit}}' }
+  spec.source       = { :git => 'https://github.com/flagman/go-flagman.git', :commit => '{{.Commit}}' }
 
 	spec.platform = :ios
   spec.ios.deployment_target  = '9.0'
-	spec.ios.vendored_frameworks = 'Frameworks/GMC.framework'
+	spec.ios.vendored_frameworks = 'Frameworks/gfl.framework'
 
 	spec.prepare_command = <<-CMD
-    curl https://gmcstore.blob.core.windows.net/builds/{{.Archive}}.tar.gz | tar -xvz
+    curl https://gflstore.blob.core.windows.net/builds/{{.Archive}}.tar.gz | tar -xvz
     mkdir Frameworks
-    mv {{.Archive}}/GMC.framework Frameworks
+    mv {{.Archive}}/gfl.framework Frameworks
     rm -rf {{.Archive}}
   CMD
 end

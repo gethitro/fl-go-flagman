@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-flagman Authors
+// This file is part of the go-flagman library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-flagman library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-flagman library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-flagman library. If not, see <http://www.gnu.org/licenses/>.
 
 package node
 
@@ -25,14 +25,14 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/accounts/usbwallet"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
+	"github.com/getflagman/go-flagman/accounts"
+	"github.com/getflagman/go-flagman/accounts/keystore"
+	"github.com/getflagman/go-flagman/accounts/usbwallet"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/crypto"
+	"github.com/getflagman/go-flagman/log"
+	"github.com/getflagman/go-flagman/p2p"
+	"github.com/getflagman/go-flagman/p2p/discover"
 )
 
 const (
@@ -48,7 +48,7 @@ const (
 // all registered services.
 type Config struct {
 	// Name sets the instance name of the node. It must not contain the / character and is
-	// used in the devp2p node identifier. The instance name of gmc is "gmc". If no
+	// used in the devp2p node identifier. The instance name of gfl is "gfl". If no
 	// value is specified, the basename of the current executable is used.
 	Name string `toml:"-"`
 
@@ -218,9 +218,9 @@ func DefaultWSEndpoint() string {
 // NodeName returns the devp2p node identifier.
 func (c *Config) NodeName() string {
 	name := c.name()
-	// Backwards compatibility: previous versions used title-cased "GMC", keep that.
-	if name == "gmc" || name == "gmc-testnet" {
-		name = "GMC"
+	// Backwards compatibility: previous versions used title-cased "gfl", keep that.
+	if name == "gfl" || name == "gfl-testnet" {
+		name = "gfl"
 	}
 	if c.UserIdent != "" {
 		name += "/" + c.UserIdent
@@ -244,8 +244,8 @@ func (c *Config) name() string {
 	return c.Name
 }
 
-// These resources are resolved differently for "gmc" instances.
-var isOldGMCResource = map[string]bool{
+// These resources are resolved differently for "gfl" instances.
+var isOldgflResource = map[string]bool{
 	"chaindata":          true,
 	"nodes":              true,
 	"nodekey":            true,
@@ -262,10 +262,10 @@ func (c *Config) resolvePath(path string) string {
 		return ""
 	}
 	// Backwards-compatibility: ensure that data directory files created
-	// by gmc 1.4 are used if they exist.
-	if c.name() == "gmc" && isOldGMCResource[path] {
+	// by gfl 1.4 are used if they exist.
+	if c.name() == "gfl" && isOldgflResource[path] {
 		oldpath := ""
-		if c.Name == "gmc" {
+		if c.Name == "gfl" {
 			oldpath = filepath.Join(c.DataDir, path)
 		}
 		if oldpath != "" && common.FileExist(oldpath) {
@@ -396,7 +396,7 @@ func makeAccountManager(conf *Config) (*accounts.Manager, string, error) {
 	var ephemeral string
 	if keydir == "" {
 		// There is no datadir.
-		keydir, err = ioutil.TempDir("", "go-ethereum-keystore")
+		keydir, err = ioutil.TempDir("", "go-flagman-keystore")
 		ephemeral = keydir
 	}
 

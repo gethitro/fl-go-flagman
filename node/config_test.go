@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-flagman Authors
+// This file is part of the go-flagman library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-flagman library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-flagman library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-flagman library. If not, see <http://www.gnu.org/licenses/>.
 
 package node
 
@@ -24,8 +24,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/p2p"
+	"github.com/getflagman/go-flagman/crypto"
+	"github.com/getflagman/go-flagman/p2p"
 )
 
 // Tests that datadirs can be successfully created, be them manually configured
@@ -73,15 +73,15 @@ func TestIPCPathResolution(t *testing.T) {
 	}{
 		{"", "", false, ""},
 		{"data", "", false, ""},
-		{"", "gmc.ipc", false, filepath.Join(os.TempDir(), "gmc.ipc")},
-		{"data", "gmc.ipc", false, "data/gmc.ipc"},
-		{"data", "./gmc.ipc", false, "./gmc.ipc"},
-		{"data", "/gmc.ipc", false, "/gmc.ipc"},
+		{"", "gfl.ipc", false, filepath.Join(os.TempDir(), "gfl.ipc")},
+		{"data", "gfl.ipc", false, "data/gfl.ipc"},
+		{"data", "./gfl.ipc", false, "./gfl.ipc"},
+		{"data", "/gfl.ipc", false, "/gfl.ipc"},
 		{"", "", true, ``},
 		{"data", "", true, ``},
-		{"", "gmc.ipc", true, `\\.\pipe\gmc.ipc`},
-		{"data", "gmc.ipc", true, `\\.\pipe\gmc.ipc`},
-		{"data", `\\.\pipe\gmc.ipc`, true, `\\.\pipe\gmc.ipc`},
+		{"", "gfl.ipc", true, `\\.\pipe\gfl.ipc`},
+		{"data", "gfl.ipc", true, `\\.\pipe\gfl.ipc`},
+		{"data", `\\.\pipe\gfl.ipc`, true, `\\.\pipe\gfl.ipc`},
 	}
 	for i, test := range tests {
 		// Only run when platform/test match

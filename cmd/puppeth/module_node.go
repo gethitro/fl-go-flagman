@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-flagman Authors
+// This file is part of go-flagman.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-flagman is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-flagman is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-flagman. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -26,11 +26,11 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/log"
+	"github.com/getflagman/go-flagman/common"
+	"github.com/getflagman/go-flagman/log"
 )
 
-// nodeDockerfile is the Dockerfile required to run an Musicoin node.
+// nodeDockerfile is the Dockerfile required to run an flagman node.
 var nodeDockerfile = `
 FROM ethereum/client-go:latest
 
@@ -40,15 +40,15 @@ ADD genesis.json /genesis.json
 	ADD signer.pass /signer.pass
 {{end}}
 RUN \
-  echo 'gmc --cache 512 init /genesis.json' > gmc.sh && \{{if .Unlock}}
-	echo 'mkdir -p /root/.musicoin/keystore/ && cp /signer.json /root/.musicoin/keystore/' >> gmc.sh && \{{end}}
-	echo $'gmc --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --maxpeers {{.Peers}} {{.LightFlag}} --ethstats \'{{.Ethstats}}\' {{if .BootV4}}--bootnodesv4 {{.BootV4}}{{end}} {{if .BootV5}}--bootnodesv5 {{.BootV5}}{{end}} {{if .Etherbase}}--etherbase {{.Etherbase}} --mine --minerthreads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --targetgaslimit {{.GasTarget}} --gasprice {{.GasPrice}}' >> gmc.sh
+  echo 'gfl --cache 512 init /genesis.json' > gfl.sh && \{{if .Unlock}}
+	echo 'mkdir -p /root/.flagman/keystore/ && cp /signer.json /root/.flagman/keystore/' >> gfl.sh && \{{end}}
+	echo $'gfl --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --maxpeers {{.Peers}} {{.LightFlag}} --ethstats \'{{.Ethstats}}\' {{if .BootV4}}--bootnodesv4 {{.BootV4}}{{end}} {{if .BootV5}}--bootnodesv5 {{.BootV5}}{{end}} {{if .Etherbase}}--etherbase {{.Etherbase}} --mine --minerthreads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --targetgaslimit {{.GasTarget}} --gasprice {{.GasPrice}}' >> gfl.sh
 
-ENTRYPOINT ["/bin/sh", "gmc.sh"]
+ENTRYPOINT ["/bin/sh", "gfl.sh"]
 `
 
 // nodeComposefile is the docker-compose.yml file required to deploy and maintain
-// a Musicoin node (bootnode or miner for now).
+// a flagman node (bootnode or miner for now).
 var nodeComposefile = `
 version: '2'
 services:
@@ -60,7 +60,7 @@ services:
       - "{{.FullPort}}:{{.FullPort}}/udp"{{if .Light}}
       - "{{.LightPort}}:{{.LightPort}}/udp"{{end}}
     volumes:
-      - {{.Datadir}}:/root/.musicoin{{if .Ethashdir}}
+      - {{.Datadir}}:/root/.flagman{{if .Ethashdir}}
       - {{.Ethashdir}}:/root/.ethash{{end}}
     environment:
       - FULL_PORT={{.FullPort}}/tcp
@@ -79,7 +79,7 @@ services:
     restart: always
 `
 
-// deployNode deploys a new Musicoin node container to a remote machine via SSH,
+// deployNode deploys a new flagman node container to a remote machine via SSH,
 // docker and docker-compose. If an instance with the specified network name
 // already exists there, it will be overwritten!
 func deployNode(client *sshClient, network string, bootv4, bootv5 []string, config *nodeInfos, nocache bool) ([]byte, error) {
@@ -232,7 +232,7 @@ func checkNode(client *sshClient, network string, boot bool) (*nodeInfos, error)
 
 	// Container available, retrieve its node ID and its genesis json
 	var out []byte
-	if out, err = client.Run(fmt.Sprintf("docker exec %s_%s_1 gmc --exec admin.nodeInfo.id attach", network, kind)); err != nil {
+	if out, err = client.Run(fmt.Sprintf("docker exec %s_%s_1 gfl --exec admin.nodeInfo.id attach", network, kind)); err != nil {
 		return nil, ErrServiceUnreachable
 	}
 	id := bytes.Trim(bytes.TrimSpace(out), "\"")
@@ -257,7 +257,7 @@ func checkNode(client *sshClient, network string, boot bool) (*nodeInfos, error)
 	// Assemble and return the useful infos
 	stats := &nodeInfos{
 		genesis:    genesis,
-		datadir:    infos.volumes["/root/.musicoin"],
+		datadir:    infos.volumes["/root/.flagman"],
 		ethashdir:  infos.volumes["/root/.ethash"],
 		portFull:   infos.portmap[infos.envvars["FULL_PORT"]],
 		portLight:  infos.portmap[infos.envvars["LIGHT_PORT"]],

@@ -1,41 +1,41 @@
-Name "gmc ${MAJORVERSION}.${MINORVERSION}.${BUILDVERSION}" # VERSION variables set through command line arguments
+Name "gfl ${MAJORVERSION}.${MINORVERSION}.${BUILDVERSION}" # VERSION variables set through command line arguments
 InstallDir "$InstDir"
 OutFile "${OUTPUTFILE}" # set through command line arguments
 
 # Links for "Add/Remove Programs"
-!define HELPURL "https://github.com/Musicoin/go-musicoin/issues"
-!define UPDATEURL "https://github.com/Musicoin/go-musicoin/releases"
-!define ABOUTURL "https://github.com/Musicoin/go-musicoin"
+!define HELPURL "https://github.com/flagman/go-flagman/issues"
+!define UPDATEURL "https://github.com/flagman/go-flagman/releases"
+!define ABOUTURL "https://github.com/flagman/go-flagman"
 !define /date NOW "%Y%m%d"
 
 PageEx license
   LicenseData {{.License}}
 PageExEnd
 
-# Install gmc binary
-Section "GMC" GMC_IDX
+# Install gfl binary
+Section "gfl" gfl_IDX
   SetOutPath $INSTDIR
-  file {{.GMC}}
+  file {{.gfl}}
 
   # Create start menu launcher
   createDirectory "$SMPROGRAMS\${APPNAME}"
-  createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "$INSTDIR\gmc.exe" "--fast" "--cache=512"
-  createShortCut "$SMPROGRAMS\${APPNAME}\Attach.lnk" "$INSTDIR\gmc.exe" "attach" "" ""
+  createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "$INSTDIR\gfl.exe" "--fast" "--cache=512"
+  createShortCut "$SMPROGRAMS\${APPNAME}\Attach.lnk" "$INSTDIR\gfl.exe" "attach" "" ""
   createShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "" ""
 
   # Firewall - remove rules (if exists)
-  SimpleFC::AdvRemoveRule "GMC incoming peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "GMC outgoing peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "GMC UDP discovery (UDP:30303)"
+  SimpleFC::AdvRemoveRule "gfl incoming peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "gfl outgoing peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "gfl UDP discovery (UDP:30303)"
 
   # Firewall - add rules
-  SimpleFC::AdvAddRule "GMC incoming peers (TCP:30303)" ""  6 1 1 2147483647 1 "$INSTDIR\gmc.exe" "" "" "Ethereum" 30303 "" "" ""
-  SimpleFC::AdvAddRule "GMC outgoing peers (TCP:30303)" ""  6 2 1 2147483647 1 "$INSTDIR\gmc.exe" "" "" "Ethereum" "" 30303 "" ""
-  SimpleFC::AdvAddRule "GMC UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\gmc.exe" "" "" "Ethereum" "" 30303 "" ""
+  SimpleFC::AdvAddRule "gfl incoming peers (TCP:30303)" ""  6 1 1 2147483647 1 "$INSTDIR\gfl.exe" "" "" "Ethereum" 30303 "" "" ""
+  SimpleFC::AdvAddRule "gfl outgoing peers (TCP:30303)" ""  6 2 1 2147483647 1 "$INSTDIR\gfl.exe" "" "" "Ethereum" "" 30303 "" ""
+  SimpleFC::AdvAddRule "gfl UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\gfl.exe" "" "" "Ethereum" "" 30303 "" ""
 
-  # Set default IPC endpoint (https://github.com/ethereum/EIPs/issues/147)
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\gmc.ipc"
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "A" "HKLM" "\\.\pipe\gmc.ipc"
+  # Set default IPC endpoint (https://github.com/getflagman/EIPs/issues/147)
+  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\gfl.ipc"
+  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "A" "HKLM" "\\.\pipe\gfl.ipc"
 
   # Add instdir to PATH
   Push "$INSTDIR"
@@ -54,8 +54,8 @@ Var GetInstalledSize.total
 Function GetInstalledSize
   StrCpy $GetInstalledSize.total 0
 
-  ${if} ${SectionIsSelected} ${GMC_IDX}
-    SectionGetSize ${GMC_IDX} $0
+  ${if} ${SectionIsSelected} ${gfl_IDX}
+    SectionGetSize ${gfl_IDX} $0
     IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
   ${endif}
 

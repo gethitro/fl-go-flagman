@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2016 The go-flagman Authors
+// This file is part of go-flagman.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-flagman is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-flagman is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-flagman. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -43,22 +43,22 @@ func tmpDatadirWithKeystore(t *testing.T) string {
 }
 
 func TestAccountListEmpty(t *testing.T) {
-	gmc := runGMC(t, "account", "list")
-	gmc.ExpectExit()
+	gfl := rungfl(t, "account", "list")
+	gfl.ExpectExit()
 }
 
 func TestAccountList(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	gmc := runGMC(t, "account", "list", "--datadir", datadir)
-	defer gmc.ExpectExit()
+	gfl := rungfl(t, "account", "list", "--datadir", datadir)
+	defer gfl.ExpectExit()
 	if runtime.GOOS == "windows" {
-		gmc.Expect(`
+		gfl.Expect(`
 Account #0: {7ef5a6135f1fd6a02593eedc869c6d41d934aef8} keystore://{{.Datadir}}\keystore\UTC--2016-03-22T12-57-55.920751759Z--7ef5a6135f1fd6a02593eedc869c6d41d934aef8
 Account #1: {f466859ead1932d743d622cb74fc058882e8648a} keystore://{{.Datadir}}\keystore\aaa
 Account #2: {289d485d9771714cce91d3393d764e1311907acc} keystore://{{.Datadir}}\keystore\zzz
 `)
 	} else {
-		gmc.Expect(`
+		gfl.Expect(`
 Account #0: {7ef5a6135f1fd6a02593eedc869c6d41d934aef8} keystore://{{.Datadir}}/keystore/UTC--2016-03-22T12-57-55.920751759Z--7ef5a6135f1fd6a02593eedc869c6d41d934aef8
 Account #1: {f466859ead1932d743d622cb74fc058882e8648a} keystore://{{.Datadir}}/keystore/aaa
 Account #2: {289d485d9771714cce91d3393d764e1311907acc} keystore://{{.Datadir}}/keystore/zzz
@@ -67,21 +67,21 @@ Account #2: {289d485d9771714cce91d3393d764e1311907acc} keystore://{{.Datadir}}/k
 }
 
 func TestAccountNew(t *testing.T) {
-	gmc := runGMC(t, "account", "new", "--lightkdf")
-	defer gmc.ExpectExit()
-	gmc.Expect(`
+	gfl := rungfl(t, "account", "new", "--lightkdf")
+	defer gfl.ExpectExit()
+	gfl.Expect(`
 Your new account is locked with a password. Please give a password. Do not forget this password.
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "foobar"}}
 Repeat passphrase: {{.InputLine "foobar"}}
 `)
-	gmc.ExpectRegexp(`Address: \{[0-9a-f]{40}\}\n`)
+	gfl.ExpectRegexp(`Address: \{[0-9a-f]{40}\}\n`)
 }
 
 func TestAccountNewBadRepeat(t *testing.T) {
-	gmc := runGMC(t, "account", "new", "--lightkdf")
-	defer gmc.ExpectExit()
-	gmc.Expect(`
+	gfl := rungfl(t, "account", "new", "--lightkdf")
+	defer gfl.ExpectExit()
+	gfl.Expect(`
 Your new account is locked with a password. Please give a password. Do not forget this password.
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "something"}}
@@ -92,11 +92,11 @@ Fatal: Passphrases do not match
 
 func TestAccountUpdate(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	gmc := runGMC(t, "account", "update",
+	gfl := rungfl(t, "account", "update",
 		"--datadir", datadir, "--lightkdf",
 		"f466859ead1932d743d622cb74fc058882e8648a")
-	defer gmc.ExpectExit()
-	gmc.Expect(`
+	defer gfl.ExpectExit()
+	gfl.Expect(`
 Unlocking account f466859ead1932d743d622cb74fc058882e8648a | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "foobar"}}
@@ -107,24 +107,24 @@ Repeat passphrase: {{.InputLine "foobar2"}}
 }
 
 func TestWalletImport(t *testing.T) {
-	gmc := runGMC(t, "wallet", "import", "--lightkdf", "testdata/guswallet.json")
-	defer gmc.ExpectExit()
-	gmc.Expect(`
+	gfl := rungfl(t, "wallet", "import", "--lightkdf", "testdata/guswallet.json")
+	defer gfl.ExpectExit()
+	gfl.Expect(`
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "foo"}}
 Address: {d4584b5f6229b7be90727b0fc8c6b91bb427821f}
 `)
 
-	files, err := ioutil.ReadDir(filepath.Join(gmc.Datadir, "keystore"))
+	files, err := ioutil.ReadDir(filepath.Join(gfl.Datadir, "keystore"))
 	if len(files) != 1 {
 		t.Errorf("expected one key file in keystore directory, found %d files (error: %v)", len(files), err)
 	}
 }
 
 func TestWalletImportBadPassword(t *testing.T) {
-	gmc := runGMC(t, "wallet", "import", "--lightkdf", "testdata/guswallet.json")
-	defer gmc.ExpectExit()
-	gmc.Expect(`
+	gfl := rungfl(t, "wallet", "import", "--lightkdf", "testdata/guswallet.json")
+	defer gfl.ExpectExit()
+	gfl.Expect(`
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "wrong"}}
 Fatal: could not decrypt key with given passphrase
@@ -133,23 +133,23 @@ Fatal: could not decrypt key with given passphrase
 
 func TestUnlockFlag(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--datadir", datadir, "--nat", "none", "--nodiscover", "--dev",
 		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a",
 		"js", "testdata/empty.js")
-	gmc.Expect(`
+	gfl.Expect(`
 Unlocking account f466859ead1932d743d622cb74fc058882e8648a | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "foobar"}}
 `)
-	gmc.ExpectExit()
+	gfl.ExpectExit()
 
 	wantMessages := []string{
 		"Unlocked account",
 		"=0xf466859eAD1932D743d622CB74FC058882E8648A",
 	}
 	for _, m := range wantMessages {
-		if !strings.Contains(gmc.StderrText(), m) {
+		if !strings.Contains(gfl.StderrText(), m) {
 			t.Errorf("stderr text does not contain %q", m)
 		}
 	}
@@ -157,11 +157,11 @@ Passphrase: {{.InputLine "foobar"}}
 
 func TestUnlockFlagWrongPassword(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--datadir", datadir, "--nat", "none", "--nodiscover", "--dev",
 		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a")
-	defer gmc.ExpectExit()
-	gmc.Expect(`
+	defer gfl.ExpectExit()
+	gfl.Expect(`
 Unlocking account f466859ead1932d743d622cb74fc058882e8648a | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "wrong1"}}
@@ -173,21 +173,21 @@ Fatal: Failed to unlock account f466859ead1932d743d622cb74fc058882e8648a (could 
 `)
 }
 
-// https://github.com/ethereum/go-ethereum/issues/1785
+// https://github.com/getflagman/go-flagman/issues/1785
 func TestUnlockFlagMultiIndex(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--datadir", datadir, "--nat", "none", "--nodiscover", "--dev",
 		"--unlock", "0,2",
 		"js", "testdata/empty.js")
-	gmc.Expect(`
+	gfl.Expect(`
 Unlocking account 0 | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "foobar"}}
 Unlocking account 2 | Attempt 1/3
 Passphrase: {{.InputLine "foobar"}}
 `)
-	gmc.ExpectExit()
+	gfl.ExpectExit()
 
 	wantMessages := []string{
 		"Unlocked account",
@@ -195,7 +195,7 @@ Passphrase: {{.InputLine "foobar"}}
 		"=0x289d485D9771714CCe91D3393D764E1311907ACc",
 	}
 	for _, m := range wantMessages {
-		if !strings.Contains(gmc.StderrText(), m) {
+		if !strings.Contains(gfl.StderrText(), m) {
 			t.Errorf("stderr text does not contain %q", m)
 		}
 	}
@@ -203,11 +203,11 @@ Passphrase: {{.InputLine "foobar"}}
 
 func TestUnlockFlagPasswordFile(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--datadir", datadir, "--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0",
 		"--password", "testdata/passwords.txt", "--unlock", "0,2",
 		"js", "testdata/empty.js")
-	gmc.ExpectExit()
+	gfl.ExpectExit()
 
 	wantMessages := []string{
 		"Unlocked account",
@@ -215,7 +215,7 @@ func TestUnlockFlagPasswordFile(t *testing.T) {
 		"=0x289d485D9771714CCe91D3393D764E1311907ACc",
 	}
 	for _, m := range wantMessages {
-		if !strings.Contains(gmc.StderrText(), m) {
+		if !strings.Contains(gfl.StderrText(), m) {
 			t.Errorf("stderr text does not contain %q", m)
 		}
 	}
@@ -223,29 +223,29 @@ func TestUnlockFlagPasswordFile(t *testing.T) {
 
 func TestUnlockFlagPasswordFileWrongPassword(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--datadir", datadir, "--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0",
 		"--password", "testdata/wrong-passwords.txt", "--unlock", "0,2")
-	defer gmc.ExpectExit()
-	gmc.Expect(`
+	defer gfl.ExpectExit()
+	gfl.Expect(`
 Fatal: Failed to unlock account 0 (could not decrypt key with given passphrase)
 `)
 }
 
 func TestUnlockFlagAmbiguous(t *testing.T) {
 	store := filepath.Join("..", "..", "accounts", "keystore", "testdata", "dupes")
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--keystore", store, "--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0",
 		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a",
 		"js", "testdata/empty.js")
-	defer gmc.ExpectExit()
+	defer gfl.ExpectExit()
 
 	// Helper for the expect template, returns absolute keystore path.
-	gmc.SetTemplateFunc("keypath", func(file string) string {
+	gfl.SetTemplateFunc("keypath", func(file string) string {
 		abs, _ := filepath.Abs(filepath.Join(store, file))
 		return abs
 	})
-	gmc.Expect(`
+	gfl.Expect(`
 Unlocking account f466859ead1932d743d622cb74fc058882e8648a | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "foobar"}}
@@ -257,14 +257,14 @@ Your passphrase unlocked keystore://{{keypath "1"}}
 In order to avoid this warning, you need to remove the following duplicate key files:
    keystore://{{keypath "2"}}
 `)
-	gmc.ExpectExit()
+	gfl.ExpectExit()
 
 	wantMessages := []string{
 		"Unlocked account",
 		"=0xf466859eAD1932D743d622CB74FC058882E8648A",
 	}
 	for _, m := range wantMessages {
-		if !strings.Contains(gmc.StderrText(), m) {
+		if !strings.Contains(gfl.StderrText(), m) {
 			t.Errorf("stderr text does not contain %q", m)
 		}
 	}
@@ -272,17 +272,17 @@ In order to avoid this warning, you need to remove the following duplicate key f
 
 func TestUnlockFlagAmbiguousWrongPassword(t *testing.T) {
 	store := filepath.Join("..", "..", "accounts", "keystore", "testdata", "dupes")
-	gmc := runGMC(t,
+	gfl := rungfl(t,
 		"--keystore", store, "--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0",
 		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a")
-	defer gmc.ExpectExit()
+	defer gfl.ExpectExit()
 
 	// Helper for the expect template, returns absolute keystore path.
-	gmc.SetTemplateFunc("keypath", func(file string) string {
+	gfl.SetTemplateFunc("keypath", func(file string) string {
 		abs, _ := filepath.Abs(filepath.Join(store, file))
 		return abs
 	})
-	gmc.Expect(`
+	gfl.Expect(`
 Unlocking account f466859ead1932d743d622cb74fc058882e8648a | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
 Passphrase: {{.InputLine "wrong"}}
@@ -292,5 +292,5 @@ Multiple key files exist for address f466859ead1932d743d622cb74fc058882e8648a:
 Testing your passphrase against all of them...
 Fatal: None of the listed files could be unlocked.
 `)
-	gmc.ExpectExit()
+	gfl.ExpectExit()
 }
