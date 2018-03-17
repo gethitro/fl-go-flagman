@@ -1,15 +1,13 @@
 ## Go flagman
 
-Official golang implementation of the Ethereum-based flagman protocol.
+Official golang implementation of the Flagman-based protocol.
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flagmans/Lobby)
-
-Binaries are published at https://github.com/flagman/go-flagman/releases.
+Binaries are published at https://github.com/getflagman/go-flagman/releases.
 
 ## Building the source
 
 For prerequisites and detailed build instructions please stick to the official go-flagman
-[Installation Instructions](https://github.com/getflagman/go-flagman/wiki/Building-Ethereum).
+[Installation Instructions](https://github.com/getflagman/go-flagman/wiki/Building-Flagman).
 
 Building gfl requires both a Go (version 1.7 or later) and a C compiler.
 You can install them using your favourite package manager.
