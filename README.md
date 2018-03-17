@@ -1,10 +1,8 @@
-## Go flagman
+## Go-flagman
 
-Official golang implementation of the Ethereum-based flagman protocol.
+Official golang implementation of the Flagman-based protocol.
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flagmans/Lobby)
-
-Binaries are published at https://github.com/flagman/go-flagman/releases.
+Binaries are published at https://github.com/getflagman/go-flagman/releases.
 
 ## Building the source
 
