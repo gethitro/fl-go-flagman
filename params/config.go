@@ -34,7 +34,7 @@ var (
 var (
 	// MainnetChainConfig is the chain parameters to run a node on the main flagman network.
 	MainnetChainConfig = &ChainConfig{
-		ChainId:        big.NewInt(34123412),
+		ChainId:        big.NewInt(3412),
 		HomesteadBlock: big.NewInt(1150000),
 		UBIForkBlock:   big.NewInt(1200001),
 		DAOForkBlock:   nil,
